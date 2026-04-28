@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Monthly Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family:Arial; padding:20px; }
+    h1 { text-align:center; }
+
+    .top { text-align:center; margin-bottom:20px; }
+    select, button { padding:8px; margin:5px; }
+
+    .chart-box {
+      background:white;
+      padding:20px;
+      border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Monthly Analysis</h1>
+
+<div class="top">
+  <select id="month" onchange="update()">
+    <option value="jan">January 2026</option>
+    <option value="feb">February 2026</option>
+    <option value="mar">March 2026</option>
+  </select>
+
+  <select id="type" onchange="update()">
+    <option value="current">Current (RST)</option>
+    <option value="load">Overload (%)</option>
+    <option value="unb">Unbalance</option>
+    <option value="temp">Temperature</option>
+  </select>
+
+  <a href="index.html"><button>Back</button></a>
+</div>
+
+<div class="chart-box">
+  <canvas id="chart"></canvas>
+</div>
+
+<script>
+
+const RATING = 607;
+
+// ===== REALISTIC DATA GENERATOR =====
+function genMonth(days) {
+  let data = [];
+
+  for (let i = 1; i <= days; i++) {
+
+    let base = 490 + Math.sin(i/5) * 10;
+
+    let IR = base + (Math.random()*6 - 3);
+    let IS = base - 5 + (Math.random()*6 - 3);
+    let IT = base + 5 + (Math.random()*6 - 3);
+
+    IR = Math.min(Math.max(IR, 450), 530);
+    IS = Math.min(Math.max(IS, 450), 530);
+    IT = Math.min(Math.max(IT, 450), 530);
+
+    let Iavg = (IR + IS + IT) / 3;
+    let Imax = Math.max(IR, IS, IT);
+
+    let unb = 1 + Math.random()*3;
+    let temp = 55 + Math.random()*15;
+    let load = 70 + Math.random()*10;
+
+    data.push({
+      day: i,
+      IR, IS, IT,
+      Iavg,
+      load,
+      unb,
+      temp
+    });
+  }
+
+  return data;
+}
+
+// ===== BEDA PER BULAN =====
+let dataMap = {
+  jan: genMonth(31),
+  feb: genMonth(28),
+  mar: genMonth(31)
+};
+
+let chart;
+let chartEl = document.getElementById("chart");
+
+function update(){
+  let m = document.getElementById("month").value;
+  let t = document.getElementById("type").value;
+
+  let d = dataMap[m];
+  let labels = d.map(x => "Day " + x.day);
+
+  if (chart) chart.destroy();
+
+  let unit = "";
+  let datasets = [];
+
+  // === TENTUKAN DATA + SATUAN
+  if (t === "current") {
+    unit = "A";
+    datasets = [
+      { label: "IR (A)", data: d.map(x => x.IR), tension: 0.3 },
+      { label: "IS (A)", data: d.map(x => x.IS), tension: 0.3 },
+      { label: "IT (A)", data: d.map(x => x.IT), tension: 0.3 }
+    ];
+  } else if (t === "load") {
+    unit = "%";
+    datasets = [
+      { label: "Load (%)", data: d.map(x => x.load), tension: 0.3 }
+    ];
+  } else if (t === "unb") {
+    unit = "%";
+    datasets = [
+      { label: "Unbalance (%)", data: d.map(x => x.unb), tension: 0.3 }
+    ];
+  } else if (t === "temp") {
+    unit = "°C";
+    datasets = [
+      { label: "Temperature (°C)", data: d.map(x => x.temp), tension: 0.3 }
+    ];
+  }
+
+  // === BUAT CHART
+  chart = new Chart(chartEl, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
+    options: {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.dataset.label + ": " + context.parsed.y.toFixed(1) + " " + unit;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: unit
+          }
+        }
+      }
+    }
+  });
+}
+
+update();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Transformer Monitoring</title>
+
+  <style>
+    body { font-family: Arial; background:#f4f6f9; padding:20px; }
+    h1 { text-align:center; margin-bottom:5px; }
+    .date { text-align:center; color:gray; margin-bottom:15px; }
+
+    .menu { text-align:center; margin-bottom:20px; }
+    button { padding:10px 20px; cursor:pointer; }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+    }
+
+    .card {
+      background:white;
+      padding:20px;
+      border-radius:10px;
+      text-align:center;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+
+    .label { color:gray; }
+    .value { font-size:26px; font-weight:bold; }
+
+    /* color state */
+    .green { background:#e6f4ea; color:#2e7d32; }
+    .yellow { background:#fff8e1; color:#f9a825; }
+    .orange { background:#fff3e0; color:#ef6c00; }
+    .red { background:#fdecea; color:#c62828; }
+
+    /* range indicator */
+    .range {
+      margin-top:8px;
+      font-size:12px;
+    }
+    .range span { margin:0 3px; font-weight:bold; }
+    .g{color:green;} .y{color:goldenrod;}
+    .o{color:orange;} .r{color:red;}
+
+  </style>
+</head>
+
+<body>
+
+<h1>Transformer 400 kVA Monitoring</h1>
+<div class="date" id="date"></div>
+
+<div class="menu">
+  <a href="monthly.html"><button>View Monthly Graph</button></a>
+</div>
+
+<div class="grid">
+
+  <!-- IR -->
+  <div class="card" id="cardIR">
+    <div class="label">Current R</div>
+    <div class="value">-</div>
+    <div class="range">
+      <span class="g">0-425</span>
+      <span class="y">425-490</span>
+      <span class="o">490-546</span>
+      <span class="r">>546</span> A
+    </div>
+  </div>
+
+  <!-- IS -->
+  <div class="card" id="cardIS">
+    <div class="label">Current S</div>
+    <div class="value">-</div>
+    <div class="range">
+      <span class="g">0-425</span>
+      <span class="y">425-490</span>
+      <span class="o">490-546</span>
+      <span class="r">>546</span> A
+    </div>
+  </div>
+
+  <!-- IT -->
+  <div class="card" id="cardIT">
+    <div class="label">Current T</div>
+    <div class="value">-</div>
+    <div class="range">
+      <span class="g">0-425</span>
+      <span class="y">425-490</span>
+      <span class="o">490-546</span>
+      <span class="r">>546</span> A
+    </div>
+  </div>
+
+  <!-- LOAD -->
+  <div class="card" id="cardLoad">
+    <div class="label">Load (Avg)</div>
+    <div class="value">-</div>
+    <div class="range">
+      <span class="g"><80%</span>
+      <span class="y">80-90%</span>
+      <span class="o">90-100%</span>
+      <span class="r">>100%</span>
+    </div>
+  </div>
+
+  <!-- TEMP -->
+  <div class="card" id="cardTemp">
+    <div class="label">Temperature</div>
+    <div class="value">-</div>
+    <div class="range">
+      <span class="g">0-40</span>
+      <span class="y">40-60</span>
+      <span class="o">60-80</span>
+      <span class="r">>80</span> °C
+    </div>
+  </div>
+
+  <!-- UNBALANCE -->
+  <div class="card" id="cardUnb">
+    <div class="label">Unbalance</div>
+    <div class="value">-</div>
+    <div class="range">
+      <span class="g">0-5%</span>
+      <span class="y">5-10%</span>
+      <span class="o">10-20%</span>
+      <span class="r">>20%</span>
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
