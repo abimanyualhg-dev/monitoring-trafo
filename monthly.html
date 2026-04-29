@@ -140,6 +140,18 @@ function update(){
       datasets: datasets
     },
     options: {
+    onClick: function(evt, elements) {
+  if (elements.length > 0) {
+    let index = elements[0].index;
+    let dayData = d[index];
+
+    let month = document.getElementById("month").value;
+
+    window.location.href =
+      `daily.html?month=${month}&day=${dayData.day}&avg=${dayData.Iavg}`;
+  }
+},
+
       plugins: {
         tooltip: {
           callbacks: {
