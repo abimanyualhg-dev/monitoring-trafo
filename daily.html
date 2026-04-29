@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daily Monitoring</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .top-bar {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .chart-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    canvas {
+      max-height: 400px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1 id="title">Daily Graph</h1>
+
+<div class="top-bar">
+  <select id="type" onchange="update()">
+    <option value="current">Current (RST)</option>
+    <option value="load">Overload (%)</option>
+    <option value="unb">Unbalance (%)</option>
+    <option value="temp">Temperature (°C)</option>
+  </select>
+</div>
+
+<div class="chart-box">
+  <canvas id="chart"></canvas>
+</div>
+
+<script>
+
+// ===== AMBIL PARAMETER DARI URL =====
+const params = new URLSearchParams(window.location.search);
+const avg = parseFloat(params.get("avg"));
+const day = params.get("day");
+const month = params.get("month");
+
+document.getElementById("title").innerText =
+  `Daily Monitoring - ${month.toUpperCase()} Day ${day}`;
+
+
+// ===== GENERATE DATA VALID =====
+function genDaily(avg){
+
+  let data = [];
+
+  // === TARGET RANGE ===
+  const MIN_I = 450;
+  const MAX_I = 530;
+
+  const MIN_LOAD = 70;
+  const MAX_LOAD = 80;
+
+  const MIN_UNB = 1;
+  const MAX_UNB = 4;
+
+  const MIN_TEMP = 55;
+  const MAX_TEMP = 70;
+
+  for(let h=0; h<24; h++){
+
+    // profil halus (gak fluktuatif)
+    let factor = 0.95 + 0.05*Math.sin((h/24)*2*Math.PI);
+
+    let base = avg * factor;
+
+    // === CURRENT (dibatasi natural, bukan dipotong brutal)
+    let IR = base + (Math.random()*6 - 3);
+    let IS = base - 5 + (Math.random()*6 - 3);
+    let IT = base + 5 + (Math.random()*6 - 3);
+
+    // clamp biar tetap dalam range realistis
+    IR = Math.min(Math.max(IR, MIN_I), MAX_I);
+    IS = Math.min(Math.max(IS, MIN_I), MAX_I);
+    IT = Math.min(Math.max(IT, MIN_I), MAX_I);
+
+    let Iavg = (IR + IS + IT)/3;
+    let Imax = Math.max(IR, IS, IT);
+
+    // === OVERLOAD (range sempit, stabil)
+    let load = MIN_LOAD + (Math.random()*(MAX_LOAD - MIN_LOAD));
+
+    // === UNBALANCE (kecil, stabil)
+    let unb = MIN_UNB + (Math.random()*(MAX_UNB - MIN_UNB));
+
+    // === TEMPERATURE (ikut arus tapi tetap di range)
+    let temp = 60 + (Iavg - 490)*0.03 + (Math.random()*2 - 1);
+    temp = Math.min(Math.max(temp, MIN_TEMP), MAX_TEMP);
+
+    data.push({
+      hour: h,
+      IR, IS, IT,
+      load,
+      unb,
+      temp
+    });
+  }
+
+  return data;
+}
+
+let data = genDaily(avg);
+
+let chart;
+let chartEl = document.getElementById("chart");
+
+
+// ===== UPDATE CHART =====
+function update(){
+
+  let type = document.getElementById("type").value;
+
+  if(chart) chart.destroy();
+
+  let labels = data.map(x => x.hour + ":00");
+
+  let datasets = [];
+  let unit = "";
+
+  if(type === "current"){
+    unit = "A";
+    datasets = [
+      { label: "IR (A)", data: data.map(x=>x.IR), tension:0.3 },
+      { label: "IS (A)", data: data.map(x=>x.IS), tension:0.3 },
+      { label: "IT (A)", data: data.map(x=>x.IT), tension:0.3 }
+    ];
+  }
+
+  else if(type === "load"){
+    unit = "%";
+    datasets = [
+      { label: "Overload (%)", data: data.map(x=>x.load), tension:0.3 }
+    ];
+  }
+
+  else if(type === "unb"){
+    unit = "%";
+    datasets = [
+      { label: "Unbalance (%)", data: data.map(x=>x.unb), tension:0.3 }
+    ];
+  }
+
+  else if(type === "temp"){
+    unit = "°C";
+    datasets = [
+      { label: "Temperature (°C)", data: data.map(x=>x.temp), tension:0.3 }
+    ];
+  }
+
+  chart = new Chart(chartEl, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context){
+              return context.dataset.label + ": " +
+                context.parsed.y.toFixed(1) + " " + unit;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: unit
+          }
+        }
+      }
+    }
+  });
+}
+
+// init
+update();
+
+</script>
+
+</body>
+</html>
