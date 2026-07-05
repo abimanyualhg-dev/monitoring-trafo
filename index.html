@@ -23,7 +23,13 @@
       border-radius:10px;
       text-align:center;
       box-shadow:0 2px 8px rgba(0,0,0,0.1);
-      transition:0.3s;
+      transition:0.25s ease;
+      cursor:pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow:0 6px 18px rgba(0,0,0,0.15);
     }
 
     .label { color:gray; }
@@ -44,7 +50,7 @@
     .g{color:green;} .y{color:goldenrod;}
     .o{color:orange;} .r{color:red;}
 
-    /* ===== NEW TITLE STYLE ===== */
+    /* ===== HEADER ===== */
     .header {
       text-align:center;
       margin-bottom:15px;
@@ -68,12 +74,61 @@
       color:#555;
     }
 
+    /* ===== LIQUID GLASS OVERLAY ===== */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .popup {
+      width: 85%;
+      max-width: 420px;
+      border-radius: 24px;
+
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(25px);
+
+      box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+
+      transform: scale(0.75);
+      opacity: 0;
+
+      transition: all 0.28s cubic-bezier(0.2, 1.4, 0.2, 1);
+      padding: 20px;
+      color: #111;
+    }
+
+    .overlay.show .popup {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .popup-title {
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .popup-value {
+      font-size:32px;
+      font-weight:800;
+    }
+
   </style>
 </head>
 
 <body>
 
-<!-- ===== REPLACED TITLE ONLY ===== -->
 <div class="header">
   <div class="main-title">DISTRIBUTION TRANSFORMER MONITORING</div>
   <div class="sub-title">BY : ABIMANYU FURQAN AL-HAGUS</div>
@@ -89,7 +144,6 @@
 
 <div class="grid">
 
-  <!-- IR -->
   <div class="card" id="cardIR">
     <div class="label">Current R</div>
     <div class="value">-</div>
@@ -101,7 +155,6 @@
     </div>
   </div>
 
-  <!-- IS -->
   <div class="card" id="cardIS">
     <div class="label">Current S</div>
     <div class="value">-</div>
@@ -113,7 +166,6 @@
     </div>
   </div>
 
-  <!-- IT -->
   <div class="card" id="cardIT">
     <div class="label">Current T</div>
     <div class="value">-</div>
@@ -125,7 +177,6 @@
     </div>
   </div>
 
-  <!-- LOAD -->
   <div class="card" id="cardLoad">
     <div class="label">Load (Avg)</div>
     <div class="value">-</div>
@@ -137,7 +188,6 @@
     </div>
   </div>
 
-  <!-- TEMP -->
   <div class="card" id="cardTemp">
     <div class="label">Temperature</div>
     <div class="value">-</div>
@@ -149,7 +199,6 @@
     </div>
   </div>
 
-  <!-- UNBALANCE -->
   <div class="card" id="cardUnb">
     <div class="label">Unbalance</div>
     <div class="value">-</div>
@@ -163,6 +212,45 @@
 
 </div>
 
-<script src="script.js"></script>
+<!-- OVERLAY -->
+<div id="overlay" class="overlay hidden">
+  <div class="popup" id="popup">
+    <div id="popupContent"></div>
+  </div>
+</div>
+
+<script>
+const overlay = document.getElementById("overlay");
+const popupContent = document.getElementById("popupContent");
+
+const cards = document.querySelectorAll(".card");
+
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+
+    const label = card.querySelector(".label")?.innerText;
+    const value = card.querySelector(".value")?.innerText;
+
+    popupContent.innerHTML = `
+      <div class="popup-title">${label}</div>
+      <div class="popup-value">${value}</div>
+      <div style="margin-top:10px;opacity:0.7;font-size:13px;">
+        Detail real-time monitoring (mode preview)
+      </div>
+    `;
+
+    overlay.classList.remove("hidden");
+    overlay.classList.add("show");
+  });
+});
+
+overlay.addEventListener("click", (e) => {
+  if (e.target === overlay) {
+    overlay.classList.remove("show");
+    setTimeout(() => overlay.classList.add("hidden"), 200);
+  }
+});
+</script>
+
 </body>
 </html>
