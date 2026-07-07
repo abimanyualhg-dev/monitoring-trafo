@@ -219,31 +219,125 @@ document.querySelectorAll(".card").forEach(card=>{
 
 let activeCard = null;
 
-function openCard(cardId){
+function closeCard(){
 
-    const grid = document.querySelector(".grid");
-    const card = document.getElementById(cardId);
+    if(!activeCard) return;
 
-    // klik card yang sama = tutup
-    if(activeCard === card){
-        grid.classList.remove("focus");
-        card.classList.remove("active");
-        activeCard = null;
+    document.querySelector(".grid").classList.remove("focus");
+
+    gsap.timeline()
+
+    .to(activeCard,{
+        duration:.22,
+        scaleX:1.08,
+        scaleY:.96,
+        borderRadius:28,
+        ease:"power2.out"
+    })
+
+    .to(activeCard,{
+        duration:.45,
+        scale:1,
+        rotationX:0,
+        rotationY:0,
+        x:0,
+        y:0,
+        ease:"elastic.out(1,.55)"
+    },"<");
+
+    gsap.to(activeCard,{
+        "--shine":"-180%",
+        duration:.45
+    });
+
+    activeCard.classList.remove("active");
+
+    activeCard=null;
+
+}
+
+function openCard(card){
+
+    if(activeCard===card){
+        closeCard();
         return;
     }
 
-    // reset semua active
-    document.querySelectorAll(".card").forEach(c=>{
-        c.classList.remove("active");
+    if(activeCard){
+        closeCard();
+    }
+
+    activeCard=card;
+
+    document.querySelector(".grid").classList.add("focus");
+
+    card.classList.add("active");
+
+    gsap.fromTo(card,
+    {
+        "--shine":"-180%"
+    },
+    {   
+        "--shine":"180%",
+        duration:.9,
+        ease:"power2.out"
+    });
+    
+    gsap.set(card,{
+        transformPerspective:1200,
+        transformOrigin:"center center"
     });
 
-    activeCard = card;
-    grid.classList.add("focus");
-    card.classList.add("active");
+    gsap.timeline()
+
+    .fromTo(card,
+    {
+        scaleX:.90,
+        scaleY:1.12
+    },
+    {
+        scaleX:1.08,
+        scaleY:.95,
+        duration:.16,
+        ease:"power2.out"
+    })
+
+    .to(card,{
+        scale:1.15,
+        borderRadius:36,
+        duration:.45,
+        ease:"elastic.out(1,.55)"
+    });
+
+    gsap.fromTo(card,
+    {
+        rotationX:6,
+        rotationY:-6
+    },
+    {
+        rotationX:0,
+        rotationY:0,
+        duration:.6,
+        ease:"power3.out"
+    });
+
+    gsap.fromTo(card.querySelector("::after"),{},{}); // abaikan baris ini
+
 }
 
-document.querySelectorAll(".card").forEach(card=>{
-    card.addEventListener("click",()=>{
-        openCard(card.id);
+document.querySelectorAll(".card").forEach(card => {
+
+    card.addEventListener("click", (e) => {
+
+        const rect = card.getBoundingClientRect();
+
+        const ox = e.clientX - rect.left;
+        const oy = e.clientY - rect.top;
+
+        card.style.transformOrigin = `${ox}px ${oy}px`;
+
+        openCard(card);
+
     });
+
 });
