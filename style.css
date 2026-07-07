@@ -153,6 +153,25 @@ button:hover{
     transition:opacity .35s;
 }
 
+.card::after{
+    content:"";
+    position:absolute;
+    inset:-30%;
+    pointer-events:none;
+
+    background:linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255,255,255,.25) 48%,
+        rgba(255,255,255,.45) 50%,
+        rgba(255,255,255,.18) 53%,
+        transparent 70%
+    );
+
+    transform:translateX(-180%) rotate(15deg);
+    opacity:.55;
+}
+
 /* hover */
 .card:hover::before{
     opacity:1;
@@ -366,8 +385,17 @@ background:rgba(0,0,0,.18);
 .grid.focus .card.active{
     filter:none;
     opacity:1;
-    transform:scale(1.15);
-    z-index:20;
-    box-shadow:
-        0 20px 60px rgba(0,0,0,.35);
+    z-index:100;
+}
+
+.card{
+    --shine:-180%;
+}
+
+.card::after{
+
+    transform:
+    translateX(var(--shine))
+    rotate(15deg);
+
 }
