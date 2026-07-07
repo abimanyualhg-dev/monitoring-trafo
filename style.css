@@ -1,0 +1,373 @@
+/* ===========================
+   GLOBAL
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Inter",sans-serif;
+    background:
+        radial-gradient(circle at top,#1e293b,#0f172a 65%);
+    color:white;
+    padding:40px;
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.main-title{
+    font-size:52px;
+    font-weight:800;
+    line-height:1.05;
+    letter-spacing:2px;
+    margin-bottom:14px;
+}
+
+.sub-title{
+    font-size:20px;
+    font-weight:500;
+    color:rgba(255,255,255,.82);
+    margin-bottom:8px;
+}
+
+.sub-small{
+    font-size:14px;
+    color:rgba(255,255,255,.45);
+    letter-spacing:1px;
+}
+
+.date{
+    text-align:center;
+    color:rgba(255,255,255,.6);
+    margin-bottom:25px;
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.menu{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+button{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    color:white;
+    padding:14px 28px;
+    border-radius:999px;
+    cursor:pointer;
+    font-size:15px;
+    transition:.35s;
+}
+
+button:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,.15);
+}
+
+/* ===========================
+   GRID
+=========================== */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+}
+
+/* ===========================
+   CARD
+=========================== */
+
+.card{
+    cursor:pointer;
+    transform-style:preserve-3d;
+    will-change:transform;
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.4);
+
+    position:relative;
+    overflow:hidden;
+    padding:26px;
+    border-radius:28px;
+    text-align:center;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(30px);
+    -webkit-backdrop-filter:blur(22px);
+    
+    box-shadow:
+    0 10px 35px rgba(0,0,0,.22),
+    inset 0 1px rgba(255,255,255,.08);
+    
+    transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    background .35s ease;
+    --x:50%;
+    --y:50%;
+    
+    position:relative;
+    overflow:hidden;
+    
+    transition:
+    transform .18s linear,
+    
+    box-shadow .3s,
+    
+    background .3s;
+}
+
+/* highlight kaca */
+
+.card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+    radial-gradient(
+        circle at var(--x) var(--y),
+        rgba(255,255,255,.35),
+        rgba(255,255,255,.06) 18%,
+        transparent 55%
+    );
+    opacity:0;
+    transition:opacity .35s;
+}
+
+/* hover */
+.card:hover::before{
+    opacity:1;
+}
+
+/* ===========================
+   TEXT
+=========================== */
+
+.label{
+    color:rgba(255,255,255,.65);
+    font-size:15px;
+    font-weight:500;
+    margin-bottom:10px;
+}
+
+.value{
+    font-size:42px;
+    font-weight:700;
+    transition:.25s;
+    display:inline-block;
+}
+
+/* ===========================
+   RANGE
+=========================== */
+
+.range{
+    margin-top:12px;
+    font-size:12px;
+    color:rgba(255,255,255,.65);
+}
+
+.range span{
+    margin:0 3px;
+    font-weight:bold;
+}
+
+.g{
+    color:#22c55e;
+}
+
+.y{
+    color:#facc15;
+}
+
+.o{
+    color:#fb923c;
+}
+
+.r{
+    color:#ef4444;
+}
+
+/* ===========================
+   STATUS COLOR
+=========================== */
+
+.green{
+    border-color:#22c55e55;
+}
+
+.green .value{
+    color:#22c55e;
+}
+
+.yellow{
+    border-color:#facc1555;
+}
+
+.yellow .value{
+    color:#facc15;
+}
+
+.orange{
+    border-color:#fb923c55;
+}
+
+.orange .value{
+    color:#fb923c;
+}
+
+.red{
+    border-color:#ef444455;
+}
+
+.red .value{
+    color:#ef4444;
+}
+
+footer{
+    margin-top:70px;
+    text-align:center;
+    color:rgba(255,255,255,.35);
+    font-size:13px;
+    letter-spacing:.5px;
+}
+
+footer strong{
+    color:rgba(255,255,255,.7);
+    font-weight:600;
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+
+.footer{
+    margin-top:70px;
+    text-align:center;
+    padding:30px 0;
+}
+
+.footer-title{
+
+    font-size:13px;
+    color:rgba(255,255,255,.35);
+    letter-spacing:1.5px;
+    text-transform:capitalize;
+    margin-bottom:8px;
+}
+
+.footer-name{
+    font-size:20px;
+    font-weight:700;
+    color:rgba(255,255,255,.9);
+    margin-bottom:6px;
+}
+
+.footer-major{
+    font-size:13px;
+    letter-spacing:1px;
+    color:rgba(255,255,255,.45);
+    text-transform:uppercase;
+}
+
+/* ===========================
+   BACKGROUND LIGHT
+=========================== */
+
+body::before{
+    content:"";
+    position:fixed;
+    width:700px;
+    height:700px;
+    left:-250px;
+    top:-250px;
+    background:#2563eb;
+    opacity:.18;
+    border-radius:50%;
+    filter:blur(180px);
+    pointer-events:none;
+    z-index:-2;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    width:650px;
+    height:650px;
+    right:-250px;
+    bottom:-250px;
+    background:#7c3aed;
+    opacity:.15;
+    border-radius:50%;
+    filter:blur(180px);
+    pointer-events:none;
+    z-index:-2;
+}
+
+.overlay{
+position:fixed;
+inset:0;
+backdrop-filter:blur(0px);
+background:rgba(0,0,0,0);
+pointer-events:none;
+transition:.45s;
+z-index:20;
+}
+
+.overlay.active{
+backdrop-filter:blur(18px);
+background:rgba(0,0,0,.18);
+}
+
+#focus-layer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:999;
+}
+
+.reflection{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+}
+
+/* ===========================
+   FOCUS MODE
+=========================== */
+
+.grid.focus .card{
+    filter:blur(4px);
+    opacity:.45;
+    transform:scale(.97);
+    transition:
+        .35s cubic-bezier(.22,1,.36,1);
+}
+
+.grid.focus .card.active{
+    filter:none;
+    opacity:1;
+    transform:scale(1.15);
+    z-index:20;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35);
+}
