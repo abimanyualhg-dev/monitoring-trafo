@@ -2,138 +2,34 @@
 <html>
 <head>
   <title>Transformer Monitoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <style>
-    body { font-family: Arial; background:#f4f6f9; padding:20px; }
-    h1 { text-align:center; margin-bottom:5px; }
-    .date { text-align:center; color:gray; margin-bottom:15px; }
-
-    .menu { text-align:center; margin-bottom:20px; }
-    button { padding:10px 20px; cursor:pointer; }
-
-    .grid {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:20px;
-    }
-
-    .card {
-      background:white;
-      padding:20px;
-      border-radius:10px;
-      text-align:center;
-      box-shadow:0 2px 8px rgba(0,0,0,0.1);
-      transition:0.25s ease;
-      cursor:pointer;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow:0 6px 18px rgba(0,0,0,0.15);
-    }
-
-    .label { color:gray; }
-    .value { font-size:26px; font-weight:bold; }
-
-    /* color state */
-    .green { background:#e6f4ea; color:#2e7d32; }
-    .yellow { background:#fff8e1; color:#f9a825; }
-    .orange { background:#fff3e0; color:#ef6c00; }
-    .red { background:#fdecea; color:#c62828; }
-
-    /* range indicator */
-    .range {
-      margin-top:8px;
-      font-size:12px;
-    }
-    .range span { margin:0 3px; font-weight:bold; }
-    .g{color:green;} .y{color:goldenrod;}
-    .o{color:orange;} .r{color:red;}
-
-    /* ===== HEADER ===== */
-    .header {
-      text-align:center;
-      margin-bottom:15px;
-    }
-
-    .main-title {
-      font-size:30px;
-      font-weight:800;
-      margin:0;
-      letter-spacing:1px;
-    }
-
-    .sub-title {
-      font-size:18px;
-      margin:4px 0;
-    }
-
-    .sub-small {
-      font-size:11px;
-      margin:2px 0;
-      color:#555;
-    }
-
-    /* ===== LIQUID GLASS OVERLAY ===== */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.25);
-      backdrop-filter: blur(14px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .popup {
-      width: 85%;
-      max-width: 420px;
-      border-radius: 24px;
-
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(25px);
-
-      box-shadow: 0 25px 80px rgba(0,0,0,0.35);
-
-      transform: scale(0.75);
-      opacity: 0;
-
-      transition: all 0.28s cubic-bezier(0.2, 1.4, 0.2, 1);
-      padding: 20px;
-      color: #111;
-    }
-
-    .overlay.show .popup {
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    .popup-title {
-      font-size:18px;
-      font-weight:700;
-      margin-bottom:10px;
-    }
-
-    .popup-value {
-      font-size:32px;
-      font-weight:800;
-    }
-
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  
 </head>
 
 <body>
 
+<!-- ===== REPLACED TITLE ONLY ===== -->
 <div class="header">
-  <div class="main-title">DISTRIBUTION TRANSFORMER MONITORING</div>
-  <div class="sub-title">BY : ABIMANYU FURQAN AL-HAGUS</div>
-  <div class="sub-small">AIRPORT ELECTRICAL ENGINEERING XXIV</div>
-  <div class="sub-small">INDONESIAN CIVIL AVIATION INSTITUTE</div>
+
+    <div class="main-title">
+        DISTRIBUTION TRANSFORMER
+        <br>
+        MONITORING
+    </div>
+
+    <div class="sub-title">
+        Real-Time Monitoring Dashboard
+    </div>
+
+    <div class="sub-small">
+        Indonesian Civil Aviation Institute
+    </div>
+
 </div>
 
 <div class="date" id="date"></div>
@@ -144,6 +40,7 @@
 
 <div class="grid">
 
+  <!-- IR -->
   <div class="card" id="cardIR">
     <div class="label">Current R</div>
     <div class="value">-</div>
@@ -155,6 +52,7 @@
     </div>
   </div>
 
+  <!-- IS -->
   <div class="card" id="cardIS">
     <div class="label">Current S</div>
     <div class="value">-</div>
@@ -166,6 +64,7 @@
     </div>
   </div>
 
+  <!-- IT -->
   <div class="card" id="cardIT">
     <div class="label">Current T</div>
     <div class="value">-</div>
@@ -177,6 +76,7 @@
     </div>
   </div>
 
+  <!-- LOAD -->
   <div class="card" id="cardLoad">
     <div class="label">Load (Avg)</div>
     <div class="value">-</div>
@@ -188,6 +88,7 @@
     </div>
   </div>
 
+  <!-- TEMP -->
   <div class="card" id="cardTemp">
     <div class="label">Temperature</div>
     <div class="value">-</div>
@@ -199,6 +100,7 @@
     </div>
   </div>
 
+  <!-- UNBALANCE -->
   <div class="card" id="cardUnb">
     <div class="label">Unbalance</div>
     <div class="value">-</div>
@@ -212,45 +114,25 @@
 
 </div>
 
-<!-- OVERLAY -->
-<div id="overlay" class="overlay hidden">
-  <div class="popup" id="popup">
-    <div id="popupContent"></div>
-  </div>
-</div>
+<footer class="footer">
 
-<script>
-const overlay = document.getElementById("overlay");
-const popupContent = document.getElementById("popupContent");
+    <div class="footer-title">
+        Designed & Developed by
+    </div>
 
-const cards = document.querySelectorAll(".card");
+    <div class="footer-name">
+        Abimanyu Furqan Al-Hagus
+    </div>
 
-cards.forEach(card => {
-  card.addEventListener("click", () => {
+    <div class="footer-major">
+        Airport Electrical Engineering XXIV
+    </div>
 
-    const label = card.querySelector(".label")?.innerText;
-    const value = card.querySelector(".value")?.innerText;
+</footer>
 
-    popupContent.innerHTML = `
-      <div class="popup-title">${label}</div>
-      <div class="popup-value">${value}</div>
-      <div style="margin-top:10px;opacity:0.7;font-size:13px;">
-        Detail real-time monitoring (mode preview)
-      </div>
-    `;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Flip.min.js"></script>
 
-    overlay.classList.remove("hidden");
-    overlay.classList.add("show");
-  });
-});
-
-overlay.addEventListener("click", (e) => {
-  if (e.target === overlay) {
-    overlay.classList.remove("show");
-    setTimeout(() => overlay.classList.add("hidden"), 200);
-  }
-});
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
